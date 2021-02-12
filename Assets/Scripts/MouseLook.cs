@@ -4,41 +4,27 @@ using UnityEngine;
 
 public class MouseLook : MonoBehaviour
 {
-    private GameObject player;
-    private float minClamp = -45;
-    private float maxClamp = 45;
-    [HideInInspector]
-    public  Vector2 rotation;
-    private Vector2 currentLookRotation;
-    private Vector2 rotationV = new Vector2(0,0);
-    public float lookSensitivity = 2;
-    public float lookSmoothDamp = 0.1f;
+
+    public float mouseSensitivity = 100f;
+    public Transform playerBody; //firstPersonPlayer link
+    float xRotation = 0f;
     // Start is called before the first frame update
     void Start()
     {
-        //get the game Player object
-        player = transform.parent.gameObject;
+        Cursor.lockState = CursorLockMode.Locked; //locks the cursor in the center, and makes it so its not visible
     }
 
     // Update is called once per frame
     void Update()
-    {   
-        //if the game is playing you can look around.
-        // if(!PauseMenu.GameIsPaused && !PauseMenu.GameIsOver)
-        // {
-        //Input from the mouse
-        rotation.y += Input.GetAxis("Mouse Y") * lookSensitivity;
+    {
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime; //time.deltatime is the amount of time since the last time the update funciton was called
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-        //clamping the values
-        rotation.y = Mathf.Clamp(rotation.y, minClamp, maxClamp);
-        //rotating the character based on the x pos
-        player.transform.RotateAround(transform.position, Vector3.up, Input.GetAxis("Mouse X") * lookSensitivity);
-        //smoothing for the y axis rotation
-        currentLookRotation.y = Mathf.SmoothDamp(currentLookRotation.y, rotation.y, ref rotationV.y, lookSmoothDamp);
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f); //So the player can never over rotate.
 
-        //update the camera x rotation
-        transform.localEulerAngles = new Vector3(-currentLookRotation.y, 0, 0);
-        // }
+        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        playerBody.Rotate(Vector3.up * mouseX);
+
     }
 }
-
