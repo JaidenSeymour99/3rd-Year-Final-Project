@@ -13,8 +13,14 @@ public class PlayerMovement : MonoBehaviour
     public CharacterController controller; //looks for the CharacterController which a component that puts the usual seperate character movements such as Rigidbody and box collider into one component.
     //Public Character Variables
     public float speed = 12f;
+    public float sprintSpeed = 18f;
     public float gravity = -9.81f;
     public float jumpHeight = 3f; 
+    public float stamina = 5;
+    public float maxStamina = 5;
+
+    //Used to check if the character is sprinting (holding down shift)
+    private bool isRunning;
 
     
     //public Gun gun; //Links the gun script for the Reload() function for ammo
@@ -41,6 +47,7 @@ public class PlayerMovement : MonoBehaviour
         // killScore.text = "Kills: "+killCount.ToString();
         // roundNum.text = "Round: "+round.ToString();
     }        
+
     // Update is called once per frame
     void Update()
     {
@@ -53,13 +60,53 @@ public class PlayerMovement : MonoBehaviour
             velocity.y = -2f;
         }
 
-    
+
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
         Vector3 move = transform.right * x +transform.forward * z;
 
-        controller.Move(move * speed * Time.deltaTime);
+
+
+        //i was getting an error where it didnt stop sprinting so i had to set a cut off of how much stamina you need to have to sprint.
+        //this error was happening because it was gaining stamina once it hit 0 and then using it straight away so it was fluctuating between 0~ and 0.4~
+
+
+        //if the shift key is pressed you sprint else you just walk at normal speed
+        //once you are below 0.5 stamina you will stop sprinting.
+        if(Input.GetKey(KeyCode.LeftShift)  && stamina > 0.5)
+        {
+            isRunning = true;
+            controller.Move(move * sprintSpeed * Time.deltaTime);
+            // Debug.Log("down");
+        }
+        else if (Input.GetKeyUp(KeyCode.LeftShift) || stamina <= 0)
+        {
+            controller.Move(move * speed * Time.deltaTime);
+            isRunning = false;
+            // Debug.Log("up");
+        }
+    	else
+        {
+            controller.Move(move * speed * Time.deltaTime);
+        }
+
+        // if isRunning is true, stamina is decreased, if stamina is 0 isRunning is set to false.
+        if(isRunning)
+        {
+            stamina -= Time.deltaTime;
+            if(stamina < 0)
+            {
+                stamina = 0;
+                isRunning = false;
+            }
+        } 
+        //if stamina is less than maxStamina the stamina will refill.
+        else if (stamina < maxStamina)
+        {
+            stamina += Time.deltaTime;
+        }
+
 
     //Sets it so that the player can only jump when isGrounded is true
         if(Input.GetButtonDown("Jump") && isGrounded) 
