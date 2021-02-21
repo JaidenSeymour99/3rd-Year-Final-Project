@@ -10,14 +10,19 @@ public class PlayerMovement : MonoBehaviour
     //public GameManager gameManager; //Links the gamemanager script
     //public GenerateEnemies generateEnemies; // links the generateEnemies script
 
+
+
     public CharacterController controller; //looks for the CharacterController which a component that puts the usual seperate character movements such as Rigidbody and box collider into one component.
     //Public Character Variables
     public float speed = 12f;
     public float sprintSpeed = 18f;
     public float gravity = -9.81f;
     public float jumpHeight = 3f; 
+
     public float stamina = 5;
     public float maxStamina = 5;
+
+    public StaminaBar staminaBar;
 
     //Used to check if the character is sprinting (holding down shift)
     private bool isRunning;
@@ -44,9 +49,14 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        stamina = maxStamina;
+        staminaBar.SetMaxStamina(maxStamina);
         // killScore.text = "Kills: "+killCount.ToString();
         // roundNum.text = "Round: "+round.ToString();
     }        
+
+
+
 
     // Update is called once per frame
     void Update()
@@ -95,6 +105,8 @@ public class PlayerMovement : MonoBehaviour
         if(isRunning)
         {
             stamina -= Time.deltaTime;
+            //this is to update the actual stamina bar not just the number
+            staminaBar.SetStamina(stamina);
             if(stamina < 0)
             {
                 stamina = 0;
@@ -105,6 +117,8 @@ public class PlayerMovement : MonoBehaviour
         else if (stamina < maxStamina)
         {
             stamina += Time.deltaTime;
+            //this is to update the actual stamina bar not just the number
+            staminaBar.SetStamina(stamina);
         }
 
 
@@ -124,6 +138,8 @@ public class PlayerMovement : MonoBehaviour
         //     gameManager.EndGame();
         // }
     }
+
+
 
     //When player collides with the a Game Object with the tag "PickUp" - which i set to Ammo Boxes - it calls the Reload function in the Gun script and destroy the game objects
     // void OnTriggerEnter(Collider other) 
