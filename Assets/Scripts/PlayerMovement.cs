@@ -166,7 +166,7 @@ public class PlayerMovement : MonoBehaviour
                     {
                         buttonPressed++;
                     }
-                    Debug.Log(buttonPressed);
+                    // Debug.Log(buttonPressed);
                     if(buttonPressed == 2)
                     {
                     DoorController.doorIsOpening = true;
