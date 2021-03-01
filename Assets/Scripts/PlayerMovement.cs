@@ -30,6 +30,8 @@ public class PlayerMovement : MonoBehaviour
     Camera cam;
     //public Gun gun; //Links the gun script for the Reload() function for ammo
 
+    private static float buttonPressed;
+
     public Transform groundCheck;
     public float groundDistance = 0.4f;
     public LayerMask groundMask;
@@ -49,12 +51,16 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        buttonPressed = 0;
+        DoorController.doorIsOpening = false;
+        Timer.startRace = false;
+
         stamina = maxStamina;
         staminaBar.SetMaxStamina(maxStamina);
 
         cam = Camera.main;
         GameObject door = GameObject.Find("Door");
-        // DoorController doorController = door.GetComponent<DoorController>();
+
 
 
         // killScore.text = "Kills: "+killCount.ToString();
@@ -146,6 +152,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E))
         {
+            
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
@@ -154,7 +161,24 @@ public class PlayerMovement : MonoBehaviour
                 Interactable interactable = hit.collider.GetComponent<Interactable>();
                 if (interactable != null) 
                 {
+                    buttonPressed++;
+                    if(buttonPressed == 1)
+                    {
+                        buttonPressed++;
+                    }
+                    Debug.Log(buttonPressed);
+                    if(buttonPressed == 2)
+                    {
                     DoorController.doorIsOpening = true;
+                    Destroy (GameObject.FindWithTag("DoorButton"));
+                    buttonPressed++;
+                    Timer.startRace = true;
+                    }
+                    if(buttonPressed == 4)
+                    {
+                        Timer.Win();
+                        Timer.startRace = false;
+                    }
                 }         
             }
         }

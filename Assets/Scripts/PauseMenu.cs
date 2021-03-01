@@ -78,6 +78,7 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1f;
         GameIsOver = false;
         GameIsPaused = false;
+        
     }
     //public so that the buttons can access it
     //goes to the menu and turns time back on so everything isnt frozen when you press play again.
