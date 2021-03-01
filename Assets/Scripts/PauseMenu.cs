@@ -62,7 +62,6 @@ public class PauseMenu : MonoBehaviour
 
     public void GameOverPause()
     {
-        //not sure why but the gameover paues palyes twice 
         gameoverMenuUI.SetActive(true);
         Time.timeScale = 0f;
         GameIsPaused = true;
@@ -72,6 +71,7 @@ public class PauseMenu : MonoBehaviour
     }
     public void Restart()
     {   
+        pauseMenuUI.SetActive(false);
         gameoverMenuUI.SetActive(false);
         Scene current = SceneManager.GetActiveScene();
         SceneManager.LoadScene(current.name);
@@ -85,6 +85,7 @@ public class PauseMenu : MonoBehaviour
     {
         SceneManager.LoadScene("MainMenu");
         pauseMenuUI.SetActive(false);
+        gameoverMenuUI.SetActive(false);
         Time.timeScale = 1f;
         GameIsPaused = false;
     }
@@ -92,7 +93,7 @@ public class PauseMenu : MonoBehaviour
     //public so that the buttons can access it
     public void QuitGame()
     {
-        Debug.Log("Quitting game");
+        // Debug.Log("Quitting game");
         Application.Quit();
     }
 }
