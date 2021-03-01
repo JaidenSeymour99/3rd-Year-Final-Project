@@ -27,7 +27,7 @@ public class PlayerMovement : MonoBehaviour
     //Used to check if the character is sprinting (holding down shift)
     private bool isRunning;
 
-    
+    Camera cam;
     //public Gun gun; //Links the gun script for the Reload() function for ammo
 
     public Transform groundCheck;
@@ -51,6 +51,12 @@ public class PlayerMovement : MonoBehaviour
     {
         stamina = maxStamina;
         staminaBar.SetMaxStamina(maxStamina);
+
+        cam = Camera.main;
+        GameObject door = GameObject.Find("Door");
+        // DoorController doorController = door.GetComponent<DoorController>();
+
+
         // killScore.text = "Kills: "+killCount.ToString();
         // roundNum.text = "Round: "+round.ToString();
     }        
@@ -137,6 +143,21 @@ public class PlayerMovement : MonoBehaviour
         // {
         //     gameManager.EndGame();
         // }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if(Physics.Raycast(ray, out hit, 100))
+            {
+                Interactable interactable = hit.collider.GetComponent<Interactable>();
+                if (interactable != null) 
+                {
+                    DoorController.doorIsOpening = true;
+                }         
+            }
+        }
     }
 
 
