@@ -4,5 +4,12 @@ using UnityEngine;
 
 public class WinButton : MonoBehaviour
 {
+    public static bool victory = false;
+
+    void start()
+    {
+        victory = false;
+    }
     
+
 }

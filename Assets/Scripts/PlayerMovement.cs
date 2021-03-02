@@ -27,44 +27,42 @@ public class PlayerMovement : MonoBehaviour
     //Used to check if the character is sprinting (holding down shift)
     private bool isRunning;
 
+    
+
+    public Gun gun; //Links the gun script for the Reload() function for ammo
+
     Camera cam;
     //public Gun gun; //Links the gun script for the Reload() function for ammo
 
-    private static float buttonPressed;
-
+    
     public Transform groundCheck;
     public float groundDistance = 0.4f;
     public LayerMask groundMask;
     
     Vector3 velocity;
     bool isGrounded;
-    
-    // public int ammoCount;
 
     //killScore
-    // public int killCount;
-    // public Text killScore;
-
-    //roundText
-    // private int round = 1;
-    // public Text roundNum;
+    public int killCount;
+    public Text killScore;
+    
 
     void Start()
     {
-        buttonPressed = 0;
+        
+
+        // killScore.text = "10 / "+killCount.ToString();
+
         DoorController.doorIsOpening = false;
         Timer.startRace = false;
+        WinButton.victory = false;
 
         stamina = maxStamina;
         staminaBar.SetMaxStamina(maxStamina);
 
         cam = Camera.main;
-        GameObject door = GameObject.Find("Door");
 
 
-
-        // killScore.text = "Kills: "+killCount.ToString();
-        // roundNum.text = "Round: "+round.ToString();
     }        
 
 
@@ -93,7 +91,6 @@ public class PlayerMovement : MonoBehaviour
         //i was getting an error where it didnt stop sprinting so i had to set a cut off of how much stamina you need to have to sprint.
         //this error was happening because it was gaining stamina once it hit 0 and then using it straight away so it was fluctuating between 0~ and 0.4~
 
-
         //if the shift key is pressed you sprint else you just walk at normal speed
         //once you are below 0.5 stamina you will stop sprinting.
         if(Input.GetKey(KeyCode.LeftShift)  && stamina > 0.5)
@@ -110,6 +107,7 @@ public class PlayerMovement : MonoBehaviour
         }
     	else
         {
+            //move player at normal speed.
             controller.Move(move * speed * Time.deltaTime);
         }
 
@@ -143,13 +141,10 @@ public class PlayerMovement : MonoBehaviour
         velocity.y += gravity * Time.deltaTime;
 
         controller.Move(velocity * Time.deltaTime);
-
-    //Loads the game over screen if character falls off the ship.
-        // if (velocity.y < -60f)
-        // {
-        //     gameManager.EndGame();
-        // }
-
+        
+        
+        
+        // Debug.Log(WinButton.victory);
         if (Input.GetKeyDown(KeyCode.E))
         {
             
@@ -158,85 +153,57 @@ public class PlayerMovement : MonoBehaviour
 
             if(Physics.Raycast(ray, out hit, 100))
             {
+                //checking if the object hit has the interactable script on it.
                 Interactable interactable = hit.collider.GetComponent<Interactable>();
                 if (interactable != null) 
                 {
-                    buttonPressed++;
-                    if(buttonPressed == 1)
+                    //checking if the object hit has the win button script on it
+                    WinButton winButton = hit.collider.GetComponent<WinButton>();
+                    if (winButton != null) 
                     {
-                        buttonPressed++;
-                    }
-                    // Debug.Log(buttonPressed);
-                    if(buttonPressed == 2)
-                    {
-                    DoorController.doorIsOpening = true;
-                    Destroy (GameObject.FindWithTag("DoorButton"));
-                    buttonPressed++;
-                    Timer.startRace = true;
-                    }
-                    if(buttonPressed == 4)
-                    {
+                        WinButton.victory = true;
                         Timer.Win();
                         Timer.startRace = false;
+                    }
+                    DoorController doorSwitch = hit.collider.GetComponent<DoorController>();
+                    if (doorSwitch != null)
+                    {
+                        DoorController.doorIsOpening = true;
+                        Timer.startRace = true;
                     }
                 }         
             }
         }
     }
-
-
-
-    //When player collides with the a Game Object with the tag "PickUp" - which i set to Ammo Boxes - it calls the Reload function in the Gun script and destroy the game objects
-    // void OnTriggerEnter(Collider other) 
-    // {
+        //When player collides with the a Game Object with the tag "PickUp" - which i set to Ammo Boxes - it calls the Reload function in the Gun script and destroy the game objects
+    void OnTriggerEnter(Collider other) 
+    {
         
-    //     if(other.gameObject.CompareTag("PickUp"))
-    //     {
-    //     other.gameObject.SetActive(false);
+        if(other.gameObject.CompareTag("PickUp"))
+        {
+        other.gameObject.SetActive(false);
 
-    //     Debug.Log("More Ammo");
+        Debug.Log("More Ammo");
         
-    //     gun.Reload();
+        gun.Reload();
         
-    //     }
-    // }
+        }
+    }
 
     //This function is called from the EnemyDamage script that occurs when a player kills an enemy object
     //this increases the killCount so that when a player reaches a certain number of kills, this functions calls a function from another script (GenerateEnemies) to start another round by spawning new enemy game objects
-    // public void kill() 
-    // {
-    //     killCount = killCount + 1;
-    //     Debug.Log("Enemy Killed");
-    //     killScore.text = "Kills: "+killCount.ToString();
-    //     if(killCount == 5) 
-    //     {
-    //         Debug.Log("boop");
-    //         round = round + 1; //increments the round number
-    //         roundNum.text = "Round: "+round.ToString(); //Displays the round number 
-    //         generateEnemies.newRound();
-    //     }
-
-    //     if(killCount == 10) 
-    //     {
-    //         Debug.Log("boop");
-    //         round = round + 1;
-    //         roundNum.text = "Round: "+round.ToString();
-    //         generateEnemies.newRound3();
-    //     }
-
-    //     if(killCount == 14) 
-    //     {
-    //         Debug.Log("boop");
-    //         round = round + 1;
-    //         roundNum.text = "Round: "+round.ToString();
-    //         generateEnemies.newRound4();
-    //     }
-
-    //     if(killCount == 18) 
-    //     {
-    //        gameManager.WinGame(); //calls a function in the GenerateEnemies script that loads the WinScene Screen.
-    //     }
-
-    // }
+    public void kill() 
+    {
+        killCount = killCount - 1;
+        Debug.Log("Enemy Killed");
+        killScore.text = "10 / "+killCount.ToString();
+        if(killCount == 0) 
+        {
+            Debug.Log("boop");
+            // round = round + 1; //increments the round number
+            // roundNum.text = "Round: "+round.ToString(); //Displays the round number 
+            // generateEnemies.newRound();
+        }
+    }
 
 }
