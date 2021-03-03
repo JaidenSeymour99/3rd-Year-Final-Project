@@ -6,10 +6,10 @@ public class WinButton : MonoBehaviour
 {
     public static bool victory = false;
 
+    // public GameObject gameCompleteMenuUI;
+
     void start()
     {
         victory = false;
     }
-    
-
 }

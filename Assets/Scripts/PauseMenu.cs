@@ -11,16 +11,29 @@ public class PauseMenu : MonoBehaviour
     public GameObject pauseMenuUI;
     public GameObject gameoverMenuUI;
     public GameObject gameCompleteMenuUI;
+    
 
     void Start()
     {
+        pauseMenuUI.SetActive(false);
+        gameoverMenuUI.SetActive(false);
+        gameCompleteMenuUI.SetActive(false);
+        Time.timeScale = 1f;
         //fixing a bug that made it show the game overscene again once you respawn.
         GameIsOver = false;
+        GameIsPaused = false;
+        GameIsComplete = false;
     }
     void Update()
     {   
-        // if the game is not over
-        if(!GameIsOver){     
+        // if the game is not over and game is complete, show the game is complete menu.
+        if(!GameIsOver && GameIsComplete)
+        {  
+            GameCompletePause();
+        } 
+        //if the game is over and the game is not complete, you can press esc to open the pause menu and esc again to unpause.
+        else if(!GameIsOver && !GameIsComplete)
+        {     
             // if the player hit esc
             if(Input.GetKeyDown(KeyCode.Escape))
             {   
@@ -54,8 +67,7 @@ public class PauseMenu : MonoBehaviour
 
 // while the game is paused time stops so nothign can move, it displays the pause menu and it changes the bool to let everything know it is paused.
     void Pause()
-    {   
-        
+    {    
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
         GameIsPaused = true;
@@ -66,8 +78,7 @@ public class PauseMenu : MonoBehaviour
     {
         gameoverMenuUI.SetActive(true);
         Time.timeScale = 0f;
-        GameIsPaused = true;
-        // GameIsOver = false;
+        GameIsOver = true;
         Cursor.lockState = CursorLockMode.None;
 
     }
@@ -75,29 +86,19 @@ public class PauseMenu : MonoBehaviour
     {
         gameCompleteMenuUI.SetActive(true);
         Time.timeScale = 0f;
+        Cursor.lockState = CursorLockMode.None;
 
     }
     public void Restart()
     {   
-        pauseMenuUI.SetActive(false);
-        gameoverMenuUI.SetActive(false);
         Scene current = SceneManager.GetActiveScene();
-        SceneManager.LoadScene(current.name);
-        Time.timeScale = 1f;
-        GameIsOver = false;
-        GameIsPaused = false;
-        
-        
+        SceneManager.LoadScene(current.name);        
     }
     //public so that the buttons can access it
     //goes to the menu and turns time back on so everything isnt frozen when you press play again.
     public void LoadMenu()
     {
         SceneManager.LoadScene("MainMenu");
-        pauseMenuUI.SetActive(false);
-        gameoverMenuUI.SetActive(false);
-        Time.timeScale = 1f;
-        GameIsPaused = false;
     }
     
     //public so that the buttons can access it

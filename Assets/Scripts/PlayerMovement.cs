@@ -161,9 +161,9 @@ public class PlayerMovement : MonoBehaviour
                     WinButton winButton = hit.collider.GetComponent<WinButton>();
                     if (winButton != null) 
                     {
-                        WinButton.victory = true;
+                        PauseMenu.GameIsComplete = true;
                         Timer.Win();
-                        Timer.startRace = false;
+                        
                     }
                     DoorController doorSwitch = hit.collider.GetComponent<DoorController>();
                     if (doorSwitch != null)

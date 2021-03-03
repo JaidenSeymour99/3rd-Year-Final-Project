@@ -20,6 +20,7 @@ public class Timer : MonoBehaviour
         noStart = true;
         win = false;
         startTime = Time.time;
+        startRace = false;
     }
 
     void Update()
