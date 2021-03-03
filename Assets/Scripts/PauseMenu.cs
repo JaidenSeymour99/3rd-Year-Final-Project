@@ -7,8 +7,10 @@ public class PauseMenu : MonoBehaviour
 {
     public static bool GameIsPaused = false;
     public static bool GameIsOver = false;
+    public static bool GameIsComplete = false;
     public GameObject pauseMenuUI;
     public GameObject gameoverMenuUI;
+    public GameObject gameCompleteMenuUI;
 
     void Start()
     {
@@ -65,8 +67,14 @@ public class PauseMenu : MonoBehaviour
         gameoverMenuUI.SetActive(true);
         Time.timeScale = 0f;
         GameIsPaused = true;
-        GameIsOver = false;
+        // GameIsOver = false;
         Cursor.lockState = CursorLockMode.None;
+
+    }
+    public void GameCompletePause()
+    {
+        gameCompleteMenuUI.SetActive(true);
+        Time.timeScale = 0f;
 
     }
     public void Restart()
@@ -78,6 +86,7 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1f;
         GameIsOver = false;
         GameIsPaused = false;
+        
         
     }
     //public so that the buttons can access it
