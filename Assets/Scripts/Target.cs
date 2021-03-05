@@ -5,8 +5,10 @@ using UnityEngine;
 public class Target : MonoBehaviour
 {
 
-    public PlayerMovement playerMovement;
+    // public PlayerMovement playerMovement;
     public float health = 50f;
+    public float timeToDie = 1f;
+    public Animator anim; 
 
     public void TakeDamage (float amount)
     {
@@ -19,8 +21,14 @@ public class Target : MonoBehaviour
 
     void Die () 
     {
-        Destroy(gameObject);
-        Debug.Log("Yeet");
-        playerMovement.kill();
+        StartCoroutine(ExecuteAfterTime(timeToDie));
+        IEnumerator ExecuteAfterTime(float timeToDie)
+        {
+            anim.SetBool("IsDead", true);
+            yield return new WaitForSeconds(timeToDie);
+            Destroy(gameObject);
+            Debug.Log("Yeet");
+            // playerMovement.kill();
+        }
     }
 }

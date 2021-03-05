@@ -56,7 +56,7 @@ public class Gun : MonoBehaviour
 
     public void Reload() 
     {
-        currentAmmo = currentAmmo + 10;
+        currentAmmo += maxAmmo;
         Debug.Log("Reloading");
     }
 }
