@@ -8,6 +8,7 @@ public class Target : MonoBehaviour
     // public PlayerMovement playerMovement;
     public float health = 50f;
     public float timeToDie = 2f;
+    public float killPoints = 100f;
     public Animator anim; 
 
     public void TakeDamage (float amount)
@@ -28,7 +29,10 @@ public class Target : MonoBehaviour
             
             yield return new WaitForSeconds(timeToDie);
             Destroy(gameObject);
-            // playerMovement.kill();
+            Player.score += killPoints;
         }
     }
+
+
+
 }

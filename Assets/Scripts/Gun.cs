@@ -42,17 +42,21 @@ public class Gun : MonoBehaviour
     // Update is called once per frame
     void Update()
     {   
+        //displaying the current guns ammo.
+        ammoDisplay.text = "Bullets: "+currentAmmo.ToString();
+        //if the player is reloading, return
         if(isReloading)
         {
             return;
         }
+        //if the player has no ammo left in their gun, reload, then return.
         if (currentAmmo <= 0) 
         {
             StartCoroutine(Reload());
             return;
         }
-
-        ammoDisplay.text = "Bullets: "+currentAmmo.ToString(); //Displays the players current ammo.
+        
+        //if left mouse button is pressed and isFiring = true and currentAmmo is greater than 0 
         if (Input.GetButton("Fire1") && !isFiring && currentAmmo > 0 && Time.time >= nextTimeToFire)
         {
             nextTimeToFire = Time.time + 1f / fireRate;
@@ -69,6 +73,7 @@ public class Gun : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, range))
         {
+            
             muzzleFlash.Play();
 
             Target target = hit.transform.GetComponent<Target>();

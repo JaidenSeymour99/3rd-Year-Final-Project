@@ -18,21 +18,19 @@ public class Player : MonoBehaviour
     public float sprintSpeed = 18f;
     public float gravity = -9.81f;
     public float jumpHeight = 3f; 
-
     public float health = 100;
     public float maxHealth = 100;
     public float stamina = 5;
     public float maxStamina = 5;
 
     public HealthBar healthBar;
-
     public StaminaBar staminaBar;
-
     //Used to check if the character is sprinting (holding down shift)
     private bool isRunning;
 
-    
+    public static float score;
 
+    public bool enemyKilled = false;
     public Gun gun; //Links the gun script for the Reload() function for ammo
 
     Camera cam;
@@ -72,12 +70,15 @@ public class Player : MonoBehaviour
 
     }        
 
-
-
-
-    // Update is called once per frame
+    // updates if the player is alive or not, checks if the player is touching the ground, moves the player, player sprint, player jump, 
     void Update()
     {
+        // if you run out of health the game will be over.
+        if(health == 0)
+        {
+            PauseMenu.GameIsOver = true;
+        }
+        //testing the health bar.
         if(Input.GetKey(KeyCode.F))
         {
             health -= 1;
@@ -185,6 +186,8 @@ public class Player : MonoBehaviour
                 }         
             }
         }
+
+        // ShowScore();
     }
         //When player collides with the a Game Object with the tag "PickUp" - which i set to Ammo Boxes - it calls the Reload function in the Gun script and destroy the game objects
     void OnTriggerEnter(Collider other) 
@@ -201,20 +204,22 @@ public class Player : MonoBehaviour
         }
     }
 
-    //This function is called from the EnemyDamage script that occurs when a player kills an enemy object
-    //this increases the killCount so that when a player reaches a certain number of kills, this functions calls a function from another script (GenerateEnemies) to start another round by spawning new enemy game objects
-    public void kill() 
-    {
-        killCount = killCount - 1;
-        Debug.Log("Enemy Killed");
-        killScore.text = "10 / "+killCount.ToString();
-        if(killCount == 0) 
-        {
-            Debug.Log("boop");
-            // round = round + 1; //increments the round number
-            // roundNum.text = "Round: "+round.ToString(); //Displays the round number 
-            // generateEnemies.newRound();
-        }
-    }
+    // //This function is called from the EnemyDamage script that occurs when a player kills an enemy object
+    // //this increases the killCount so that when a player reaches a certain number of kills, this functions calls a function from another script (GenerateEnemies) to start another round by spawning new enemy game objects
+    // public void kill() 
+    // {
+    //     killCount = killCount - 1;
+    //     Debug.Log("Enemy Killed");
+    //     killScore.text = "10 / "+killCount.ToString();
+    //     if(killCount == 0) 
+    //     {
+    //         Debug.Log("boop");
+    //         // round = round + 1; //increments the round number
+    //         // roundNum.text = "Round: "+round.ToString(); //Displays the round number 
+    //         // generateEnemies.newRound();
+    //     }
+    // }
+
+
 
 }
