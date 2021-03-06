@@ -17,8 +17,13 @@ public class Gun : MonoBehaviour
     private float nextTimeToFire = 0f;
 
     //Ammo
-    public int maxAmmo = 5;
+    public int maxAmmo = 20;
     public int currentAmmo;
+    public float reloadTime = 1f;
+    public bool isReloading = false;
+
+    public Animator animator;
+
     public bool isFiring;
     public Text ammoDisplay;
 
@@ -27,17 +32,32 @@ public class Gun : MonoBehaviour
         currentAmmo = maxAmmo;
     }
 
+    void OnEnable()
+    {
+        isReloading = false;
+        animator.SetBool("Reloading", false);
+    }
+
 
     // Update is called once per frame
     void Update()
-    {
+    {   
+        if(isReloading)
+        {
+            return;
+        }
+        if (currentAmmo <= 0) 
+        {
+            StartCoroutine(Reload());
+            return;
+        }
+
         ammoDisplay.text = "Bullets: "+currentAmmo.ToString(); //Displays the players current ammo.
         if (Input.GetButton("Fire1") && !isFiring && currentAmmo > 0 && Time.time >= nextTimeToFire)
         {
             nextTimeToFire = Time.time + 1f / fireRate;
             Shoot(); //calls the shoot function
 
-            //ammos
             isFiring = true;
             currentAmmo--;
             isFiring = false;            
@@ -62,9 +82,22 @@ public class Gun : MonoBehaviour
         }
     }
 
-    public void Reload() 
+    //Reload function that plays the reload animation then sets the ammo back to full.
+    public IEnumerator Reload() 
     {
-        currentAmmo += maxAmmo;
+        isReloading = true;
         Debug.Log("Reloading");
+
+        animator.SetBool("Reloading", true);
+
+        yield return new WaitForSeconds(reloadTime - .25f);
+
+        animator.SetBool("Reloading", false);
+
+        yield return new WaitForSeconds(.25f);
+
+        currentAmmo = maxAmmo;
+        isReloading = false;
+        
     }
 }
