@@ -56,6 +56,10 @@ public class Gun : MonoBehaviour
             return;
         }
         
+        if (Input.GetKeyDown(KeyCode.R) && currentAmmo < maxAmmo)
+        {
+            StartCoroutine(Reload());
+        }
         //if left mouse button is pressed and isFiring = true and currentAmmo is greater than 0 
         if (Input.GetButton("Fire1") && !isFiring && currentAmmo > 0 && Time.time >= nextTimeToFire)
         {
@@ -66,6 +70,8 @@ public class Gun : MonoBehaviour
             currentAmmo--;
             isFiring = false;            
         }  
+
+
     }
 
     void Shoot() 

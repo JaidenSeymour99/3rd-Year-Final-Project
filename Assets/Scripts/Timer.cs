@@ -12,6 +12,7 @@ public class Timer : MonoBehaviour
     private float startTime;
     public static bool startRace = false;
     private static bool win = false;
+    private static float t;
 
     private bool noStart;
 
@@ -48,6 +49,34 @@ public class Timer : MonoBehaviour
 
     public static void Win()
     {
+        if(t <= 17)
+        {
+            Player.score += 2000;
+        }
+        if(t <= 20 && t > 17)
+        {
+            Player.score += 1200;
+        }
+        if(t <= 30 && t > 20)
+        {
+            Player.score += 800;
+        }
+        if(t <= 40 && t > 30)
+        {
+            Player.score += 600;
+        }
+        if(t <= 50 && t > 40)
+        {
+            Player.score += 400;
+        }
+        if(t <= 60 && t > 50)
+        {
+            Player.score += 300;
+        }
+        if(t > 60)
+        {
+            Player.score += 200;
+        }
         win = true;
     }
 }

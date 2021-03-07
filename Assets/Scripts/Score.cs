@@ -15,7 +15,7 @@ public class Score : MonoBehaviour
     {
         // Debug.Log(score);
         scoreText.text = "Score: " + Player.score.ToString();
-
+        
         
     }
 }

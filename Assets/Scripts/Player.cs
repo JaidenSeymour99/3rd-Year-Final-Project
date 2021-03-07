@@ -45,8 +45,7 @@ public class Player : MonoBehaviour
     bool isGrounded;
 
     //killScore
-    public int killCount;
-    public Text killScore;
+    
     
 
     void Start()
@@ -54,7 +53,7 @@ public class Player : MonoBehaviour
         
 
         // killScore.text = "10 / "+killCount.ToString();
-
+        score = 0;
         DoorController.doorIsOpening = false;
         Timer.startRace = false;
         WinButton.victory = false;
@@ -186,8 +185,6 @@ public class Player : MonoBehaviour
                 }         
             }
         }
-
-        // ShowScore();
     }
         //When player collides with the a Game Object with the tag "PickUp" - which i set to Ammo Boxes - it calls the Reload function in the Gun script and destroy the game objects
     void OnTriggerEnter(Collider other) 
@@ -202,23 +199,13 @@ public class Player : MonoBehaviour
         gun.Reload();
         
         }
-    }
+        if(other.gameObject.CompareTag("bullet"))
+        {
+        //Debug.Log("playerHit");
 
-    // //This function is called from the EnemyDamage script that occurs when a player kills an enemy object
-    // //this increases the killCount so that when a player reaches a certain number of kills, this functions calls a function from another script (GenerateEnemies) to start another round by spawning new enemy game objects
-    // public void kill() 
-    // {
-    //     killCount = killCount - 1;
-    //     Debug.Log("Enemy Killed");
-    //     killScore.text = "10 / "+killCount.ToString();
-    //     if(killCount == 0) 
-    //     {
-    //         Debug.Log("boop");
-    //         // round = round + 1; //increments the round number
-    //         // roundNum.text = "Round: "+round.ToString(); //Displays the round number 
-    //         // generateEnemies.newRound();
-    //     }
-    // }
+        other.gameObject.SetActive(false);
+        }
+    }
 
 
 
