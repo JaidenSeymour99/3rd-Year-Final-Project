@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
     //Used to check if the character is sprinting (holding down shift)
     private bool isRunning;
 
-    public static float score;
+    public static double score;
 
     public bool enemyKilled = false;
     public Gun gun; //Links the gun script for the Reload() function for ammo
@@ -104,87 +104,93 @@ public class Player : MonoBehaviour
 
         //if the shift key is pressed you sprint else you just walk at normal speed
         //once you are below 0.5 stamina you will stop sprinting.
-        if(Input.GetKey(KeyCode.LeftShift)  && stamina > 0.5)
+        if(!PauseMenu.GameIsPaused)
         {
-            isRunning = true;
-            controller.Move(move * sprintSpeed * Time.deltaTime);
-            // Debug.Log("down");
-        }
-        else if (Input.GetKeyUp(KeyCode.LeftShift) || stamina <= 0)
-        {
-            controller.Move(move * speed * Time.deltaTime);
-            isRunning = false;
-            // Debug.Log("up");
-        }
-    	else
-        {
-            //move player at normal speed.
-            controller.Move(move * speed * Time.deltaTime);
-        }
-
-        // if isRunning is true, stamina is decreased, if stamina is 0 isRunning is set to false.
-        if(isRunning)
-        {
-            stamina -= Time.deltaTime;
-            //this is to update the actual stamina bar not just the number
-            staminaBar.SetStamina(stamina);
-            if(stamina < 0)
+            if(Input.GetKey(KeyCode.LeftShift)  && stamina > 0.5)
             {
-                stamina = 0;
+                isRunning = true;
+                controller.Move(move * sprintSpeed * Time.deltaTime);
+                // Debug.Log("down");
+            }
+            else if (Input.GetKeyUp(KeyCode.LeftShift) || stamina <= 0)
+            {
+                controller.Move(move * speed * Time.deltaTime);
                 isRunning = false;
+                // Debug.Log("up");
             }
-        } 
-        //if stamina is less than maxStamina the stamina will refill.
-        else if (stamina < maxStamina)
-        {
-            stamina += Time.deltaTime;
-            //this is to update the actual stamina bar not just the number
-            staminaBar.SetStamina(stamina);
-        }
-
-
-    //Sets it so that the player can only jump when isGrounded is true
-        if(Input.GetButtonDown("Jump") && isGrounded) 
-        {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-        }
-
-        velocity.y += gravity * Time.deltaTime;
-
-        controller.Move(velocity * Time.deltaTime);
-        
-        
-        
-        // Debug.Log(WinButton.victory);
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-            if(Physics.Raycast(ray, out hit, 100))
+            else
             {
-                //checking if the object hit has the interactable script on it.
-                Interactable interactable = hit.collider.GetComponent<Interactable>();
-                if (interactable != null) 
+                //move player at normal speed.
+                controller.Move(move * speed * Time.deltaTime);
+            }
+
+            // if isRunning is true, stamina is decreased, if stamina is 0 isRunning is set to false.
+            if(isRunning)
+            {
+                stamina -= Time.deltaTime;
+                //this is to update the actual stamina bar not just the number
+                staminaBar.SetStamina(stamina);
+                if(stamina < 0)
                 {
-                    //checking if the object hit has the win button script on it
-                    WinButton winButton = hit.collider.GetComponent<WinButton>();
-                    if (winButton != null) 
+                    stamina = 0;
+                    isRunning = false;
+                }
+            } 
+            //if stamina is less than maxStamina the stamina will refill.
+            else if (stamina < maxStamina)
+            {
+                stamina += Time.deltaTime;
+                //this is to update the actual stamina bar not just the number
+                staminaBar.SetStamina(stamina);
+            }
+
+                //Sets it so that the player can only jump when isGrounded is true
+            if(Input.GetButtonDown("Jump") && isGrounded) 
+            {
+                velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            }
+
+            velocity.y += gravity * Time.deltaTime;
+
+            controller.Move(velocity * Time.deltaTime);
+            
+            
+            
+            // Debug.Log(WinButton.victory);
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                
+                Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+
+                if(Physics.Raycast(ray, out hit, 100))
+                {
+                    //checking if the object hit has the interactable script on it.
+                    Interactable interactable = hit.collider.GetComponent<Interactable>();
+                    if (interactable != null) 
                     {
-                        PauseMenu.GameIsComplete = true;
-                        Timer.Win();
-                        
-                    }
-                    DoorController doorSwitch = hit.collider.GetComponent<DoorController>();
-                    if (doorSwitch != null)
-                    {
-                        DoorController.doorIsOpening = true;
-                        Timer.startRace = true;
-                    }
-                }         
+                        //checking if the object hit has the win button script on it
+                        WinButton winButton = hit.collider.GetComponent<WinButton>();
+                        if (winButton != null) 
+                        {
+                            PauseMenu.GameIsComplete = true;
+                            Timer.Win();
+                            
+                        }
+                        DoorController doorSwitch = hit.collider.GetComponent<DoorController>();
+                        if (doorSwitch != null)
+                        {
+                            DoorController.doorIsOpening = true;
+                            Timer.startRace = true;
+                        }
+                    }         
+                }
             }
         }
+
+
+
+
     }
         //When player collides with the a Game Object with the tag "PickUp" - which i set to Ammo Boxes - it calls the Reload function in the Gun script and destroy the game objects
     void OnTriggerEnter(Collider other) 

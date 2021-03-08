@@ -60,16 +60,20 @@ public class Gun : MonoBehaviour
         {
             StartCoroutine(Reload());
         }
-        //if left mouse button is pressed and isFiring = true and currentAmmo is greater than 0 
-        if (Input.GetButton("Fire1") && !isFiring && currentAmmo > 0 && Time.time >= nextTimeToFire)
+        if(!PauseMenu.GameIsPaused)
         {
-            nextTimeToFire = Time.time + 1f / fireRate;
-            Shoot(); //calls the shoot function
+            //if left mouse button is pressed and isFiring = true and currentAmmo is greater than 0 
+            if (Input.GetButton("Fire1") && !isFiring && currentAmmo > 0 && Time.time >= nextTimeToFire)
+            {
+                nextTimeToFire = Time.time + 1f / fireRate;
+                Shoot(); //calls the shoot function
 
-            isFiring = true;
-            currentAmmo--;
-            isFiring = false;            
-        }  
+                isFiring = true;
+                currentAmmo--;
+                isFiring = false;            
+            }
+        }
+  
 
 
     }

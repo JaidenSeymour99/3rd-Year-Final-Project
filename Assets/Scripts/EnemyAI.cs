@@ -9,6 +9,7 @@ public class EnemyAI : MonoBehaviour
    public NavMeshAgent agent;
    
    public Transform player;
+   //public float ttl = 0.5f;
 
     //so that the enemy and navmesh component knows what the ground layer and player layer are.
    public LayerMask whatIsGround, whatIsPlayer;
@@ -74,6 +75,8 @@ public class EnemyAI : MonoBehaviour
             rb.AddForce(transform.forward * 25f, ForceMode.Impulse);
             rb.AddForce(transform.up * 4f, ForceMode.Impulse);
 
+            //Destroy(rb, ttl);
+            
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), timeBetweenAttacks);
         }
