@@ -121,15 +121,15 @@ public class Timer : MonoBehaviour
             }
             else if(t <= 20 && t > 17)
             {
-                Player.score *= 2;
+                Player.score *= 1.7;
             }        
             else if(t <= 17 && t > 15)
             {
-                Player.score *= 3;
+                Player.score *= 2;
             }
             else if(t <= 15 && t > 0)
             {
-                Player.score *= 4;
+                Player.score *= 3;
             }
         }
 
