@@ -123,7 +123,7 @@ public class Gun : MonoBehaviour
         reloadSound.Play();
 
         isReloading = true;
-        Debug.Log("Reloading");
+        //Debug.Log("Reloading");
 
         animator.SetBool("Reloading", true);
 

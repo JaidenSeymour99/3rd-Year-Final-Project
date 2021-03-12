@@ -11,6 +11,7 @@ public class WeaponSwitching : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // makes sure the current weapon is selected.
         SelectWeapon();
     }
 
@@ -19,8 +20,10 @@ public class WeaponSwitching : MonoBehaviour
     {
 
         previousSelectedWeapon = selectedWeapon;
+        // making sure you cant switch weapon while in pause or game over or game complete.
         if(!PauseMenu.GameIsComplete && !PauseMenu.GameIsOver && !PauseMenu.GameIsPaused)
         {
+            // if you scroll up is changes the weapon 
             if(Input.GetAxis("Mouse ScrollWheel") > 0f)
             {
                 if(selectedWeapon >= transform.childCount -1)
@@ -65,6 +68,7 @@ public class WeaponSwitching : MonoBehaviour
         }
     }
 
+    // used to toggle which weapon is showing.
     void SelectWeapon()
     {
         int i = 0; 

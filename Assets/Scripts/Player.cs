@@ -7,9 +7,6 @@ using TMPro;
 public class Player : MonoBehaviour
 {
 
-    //public GameManager gameManager; //Links the gamemanager script
-    //public GenerateEnemies generateEnemies; // links the generateEnemies script
-
     public CharacterController controller; //looks for the CharacterController which a component that puts the usual seperate character movements such as Rigidbody and box collider into one component.
     //Public Character Variables
     public float speed = 12f;
@@ -197,7 +194,7 @@ public class Player : MonoBehaviour
         {
         other.gameObject.SetActive(false);
 
-        Debug.Log("More Ammo");
+        //Debug.Log("More Ammo");
         
         gun.pickUpAmmo();
         if (Timer.current == 2 || Timer.current == 3 || Timer.current == 4)

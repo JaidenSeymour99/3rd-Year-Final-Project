@@ -9,6 +9,7 @@ public class Score : MonoBehaviour
 
     void Update()
     {
+        // used to show the players score.
         ShowScore();
     }
     public void ShowScore()

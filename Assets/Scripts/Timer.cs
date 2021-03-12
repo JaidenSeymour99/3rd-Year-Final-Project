@@ -34,16 +34,19 @@ public class Timer : MonoBehaviour
 
     void Update()
     {
-        
+        //if the game is won return.
         
         if (win) {
             return;
         }
+        //if start race is true and noStart is true set the start time and go out of the if statement by toggleing noStart to false. 
+        //this is to make sure the race timer doesnt start before the race begins.
         if(startRace && noStart)
         {
             startTime = Time.time;
             noStart = false;
         }
+        // starts the timer if startRace is true.
         if(startRace)
         {   
             t = Time.time - startTime;
@@ -57,11 +60,12 @@ public class Timer : MonoBehaviour
         }
         
     }
-
+    // used to give the player points after they win and to toggle the win variable which will then show the game is complete screen.
     public static void Win()
     {
         
         // Debug.Log(current);
+        //if its level 1 give the player a different point multiplier for different time finshed.
         if(current == 1)
         {
             if(t > 60)
@@ -97,6 +101,7 @@ public class Timer : MonoBehaviour
                 Player.score *= 4;
             }
         }
+        //if its level 2 give the player a different point multiplier for different time finshed.
         if(current == 2)
         {
             if(t > 60)
@@ -132,7 +137,7 @@ public class Timer : MonoBehaviour
                 Player.score *= 3;
             }
         }
-
+        // toggles the game is complete to make the player win the level.
         win = true;
     }
 }

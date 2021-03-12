@@ -27,7 +27,7 @@ public class GenerateEnemiesLevel4 : MonoBehaviour
 
     public void startWave() 
     {   
-        Debug.Log("BLEEP");
+        //Debug.Log("BLEEP");
         StartCoroutine(EnemySpawnShip());
     }
 

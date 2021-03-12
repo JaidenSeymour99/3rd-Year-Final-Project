@@ -6,10 +6,9 @@ public class WinButton : MonoBehaviour
 {
     public static bool victory = false;
 
-    // public GameObject gameCompleteMenuUI;
-
     void start()
     {
+        // used to show when the player wins the level.
         victory = false;
     }
 }
