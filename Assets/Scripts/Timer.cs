@@ -52,8 +52,8 @@ public class Timer : MonoBehaviour
             
             timerText.text = minutes + ":" + seconds;
 
-            finishTime = t - startTime;
-            Debug.Log(finishTime);
+            //finishTime = t - startTime;
+            //Debug.Log(finishTime);
         }
         
     }

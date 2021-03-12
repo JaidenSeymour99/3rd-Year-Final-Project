@@ -16,7 +16,8 @@ public class GenerateEnemiesLevel4 : MonoBehaviour
     public GameObject enemy;
     public int xPos;
     public int zPos;
-    public int enemyCount;
+    private int enemyCount;
+    public int enemySpawn;
 
     // Start is called before the first frame update
     void Start()
@@ -24,7 +25,7 @@ public class GenerateEnemiesLevel4 : MonoBehaviour
         startWave();
     }
 
-    private void startWave() 
+    public void startWave() 
     {   
         Debug.Log("BLEEP");
         StartCoroutine(EnemySpawnShip());
@@ -32,7 +33,7 @@ public class GenerateEnemiesLevel4 : MonoBehaviour
 
     IEnumerator EnemySpawnShip() 
     {
-        while(enemyCount < 10) 
+        while(enemyCount < enemySpawn) 
         {
             xPos = Random.Range(27,-1); //sets a random x position range for when we need to instantiate the enemy
             zPos = Random.Range(-47,-66); //sets a random y position range for when we need to instantiate the enemy

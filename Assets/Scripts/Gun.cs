@@ -11,12 +11,17 @@ public class Gun : MonoBehaviour
     public float fireRate = 4f;
 
     public Camera fpsCam;
-    public ParticleSystem muzzleFlash;
-    public GameObject impactEffect;
+    //public GameObject impactEffect;
 
+    
     private float nextTimeToFire = 0f;
 
+    //sound - calls for the shoot audiosouce
+    public AudioSource fireSound, reloadSound;
+
     //Ammo
+    public int clipsLeft;
+    //public int bulletsShot;
     public int maxAmmo = 20;
     public int currentAmmo;
     public float reloadTime = 1f;
@@ -27,8 +32,13 @@ public class Gun : MonoBehaviour
     public bool isFiring;
     public Text ammoDisplay;
 
+    //particle
+    public ParticleSystem muzzle;
+    public GameObject impactEffect;
+
     void Start() 
     {
+        clipsLeft = 1;
         currentAmmo = maxAmmo;
     }
 
@@ -42,56 +52,65 @@ public class Gun : MonoBehaviour
     // Update is called once per frame
     void Update()
     {   
-        //displaying the current guns ammo.
-        ammoDisplay.text = "Bullets: "+currentAmmo.ToString();
-        //if the player is reloading, return
-        if(isReloading)
+        if(!PauseMenu.GameIsComplete && !PauseMenu.GameIsOver && !PauseMenu.GameIsPaused)
         {
-            return;
-        }
-        //if the player has no ammo left in their gun, reload, then return.
-        if (currentAmmo <= 0) 
-        {
-            StartCoroutine(Reload());
-            return;
-        }
-        
-        if (Input.GetKeyDown(KeyCode.R) && currentAmmo < maxAmmo)
-        {
-            StartCoroutine(Reload());
-        }
-        if(!PauseMenu.GameIsPaused)
-        {
+            //displaying the current guns ammo.
+            ammoDisplay.text = ""+currentAmmo.ToString()+"/ "+clipsLeft.ToString()+" Clip";
+            //if the player is reloading, return
+            if(isReloading)
+            {
+                return;
+            }
+            //if the player has no ammo left in their gun, reload, then return.
+            if (clipsLeft > 0) 
+            {
+                if (currentAmmo <= 0) 
+                {
+                    StartCoroutine(Reload());
+                    return;
+                }
+                if (Input.GetKeyDown(KeyCode.R) && currentAmmo < maxAmmo)
+                {
+                    StartCoroutine(Reload());
+                }
+            }
+
+            
             //if left mouse button is pressed and isFiring = true and currentAmmo is greater than 0 
             if (Input.GetButton("Fire1") && !isFiring && currentAmmo > 0 && Time.time >= nextTimeToFire)
             {
                 nextTimeToFire = Time.time + 1f / fireRate;
                 Shoot(); //calls the shoot function
 
+                //plays the shooting sound
+                
+
                 isFiring = true;
                 currentAmmo--;
                 isFiring = false;            
-            }
+            }  
         }
-  
-
 
     }
 
     void Shoot() 
     {
+    
+        fireSound.Play();
+        muzzle.Play();
         RaycastHit hit;
         if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, range))
         {
             
-            muzzleFlash.Play();
-
+            //muzzleFlash.Play();
+            // Debug.Log(hit.transform.name);
             Target target = hit.transform.GetComponent<Target>();
             if (target != null)
             {
                 target.TakeDamage(damage);
             }
 
+            //instantatiates the impactEffect object at the point of ray impact then destroys the object after 2 seconds
             GameObject impactGo = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
             Destroy(impactGo, 2f); 
         }
@@ -100,6 +119,9 @@ public class Gun : MonoBehaviour
     //Reload function that plays the reload animation then sets the ammo back to full.
     public IEnumerator Reload() 
     {
+        //plays reloading sound
+        reloadSound.Play();
+
         isReloading = true;
         Debug.Log("Reloading");
 
@@ -112,7 +134,14 @@ public class Gun : MonoBehaviour
         yield return new WaitForSeconds(.25f);
 
         currentAmmo = maxAmmo;
+        clipsLeft -= 1;
         isReloading = false;
         
+    }
+
+    //called from the player script and runs when the player picks up an ammo box - this then adds 5 ammo to your clip
+    public void pickUpAmmo() 
+    {
+        clipsLeft += 1;
     }
 }

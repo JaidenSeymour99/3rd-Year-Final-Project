@@ -10,33 +10,19 @@ public class Player : MonoBehaviour
     //public GameManager gameManager; //Links the gamemanager script
     //public GenerateEnemies generateEnemies; // links the generateEnemies script
 
-
-
     public CharacterController controller; //looks for the CharacterController which a component that puts the usual seperate character movements such as Rigidbody and box collider into one component.
     //Public Character Variables
     public float speed = 12f;
-    public float sprintSpeed = 18f;
     public float gravity = -9.81f;
     public float jumpHeight = 3f; 
-    public float health = 100;
-    public float maxHealth = 100;
-    public float stamina = 5;
-    public float maxStamina = 5;
 
-    public HealthBar healthBar;
-    public StaminaBar staminaBar;
     //Used to check if the character is sprinting (holding down shift)
     private bool isRunning;
 
     public static double score;
-
-    public bool enemyKilled = false;
-    public Gun gun; //Links the gun script for the Reload() function for ammo
-
-    Camera cam;
-    //public Gun gun; //Links the gun script for the Reload() function for ammo
-
     
+    public Gun gun, gun2; //Links the gun script for the Reload() function for ammo
+
     public Transform groundCheck;
     public float groundDistance = 0.4f;
     public LayerMask groundMask;
@@ -44,15 +30,33 @@ public class Player : MonoBehaviour
     Vector3 velocity;
     bool isGrounded;
 
-    //killScore
-    
-    
+    //sprint / stamina
+    public StaminaBar staminaBar;
+    public float sprintSpeed = 18f;
+    public float stamina = 5;
+    public float maxStamina = 5;
+
+    //links the healthbar script
+     public HealthBar healthBar;
+     public float health = 100;
+     public float maxHealth = 100;
+
+    //cam
+    Camera cam;
+
+    public int enemyLevelCount;
+    public int killCount;
+    public Text killScore;
+
+
 
     void Start()
     {
+        if (Timer.current == 3 || Timer.current == 4 || Timer.current == 5 || Timer.current == 6)
+        {
+            killScore.text = ""+enemyLevelCount.ToString()+" / "+killCount.ToString()+" remain";
+        }
         
-
-        // killScore.text = "10 / "+killCount.ToString();
         score = 0;
         DoorController.doorIsOpening = false;
         Timer.startRace = false;
@@ -65,25 +69,18 @@ public class Player : MonoBehaviour
         staminaBar.SetMaxStamina(maxStamina);
 
         cam = Camera.main;
-
-
     }        
-
-    // updates if the player is alive or not, checks if the player is touching the ground, moves the player, player sprint, player jump, 
+    // Update is called once per frame
     void Update()
     {
+
         // if you run out of health the game will be over.
         if(health == 0)
         {
             PauseMenu.GameIsOver = true;
         }
-        //testing the health bar.
-        if(Input.GetKey(KeyCode.F))
-        {
-            health -= 1;
-            healthBar.SetHealth(health);
-        }
-    //Checks to see if the player is on the ground so the yposition isnt infinitely increasing when a character moves y positions.
+
+        //Checks to see if the player is on the ground so the yposition isnt infinitely increasing when a character moves y positions.
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         if(isGrounded && velocity.y < 0)
@@ -104,7 +101,7 @@ public class Player : MonoBehaviour
 
         //if the shift key is pressed you sprint else you just walk at normal speed
         //once you are below 0.5 stamina you will stop sprinting.
-        if(!PauseMenu.GameIsPaused)
+        if(!PauseMenu.GameIsPaused && !PauseMenu.GameIsOver && !PauseMenu.GameIsComplete)
         {
             if(Input.GetKey(KeyCode.LeftShift)  && stamina > 0.5)
             {
@@ -144,7 +141,7 @@ public class Player : MonoBehaviour
                 staminaBar.SetStamina(stamina);
             }
 
-                //Sets it so that the player can only jump when isGrounded is true
+            //Sets it so that the player can only jump when isGrounded is true
             if(Input.GetButtonDown("Jump") && isGrounded) 
             {
                 velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
@@ -190,9 +187,9 @@ public class Player : MonoBehaviour
 
 
 
-
     }
-        //When player collides with the a Game Object with the tag "PickUp" - which i set to Ammo Boxes - it calls the Reload function in the Gun script and destroy the game objects
+
+    //When player collides with the a Game Object with the tag "PickUp" - which i set to Ammo Boxes - it calls the Reload function in the Gun script and destroy the game objects
     void OnTriggerEnter(Collider other) 
     {
         
@@ -202,17 +199,36 @@ public class Player : MonoBehaviour
 
         Debug.Log("More Ammo");
         
-        gun.Reload();
+        gun.pickUpAmmo();
+        if (Timer.current == 2 || Timer.current == 3 || Timer.current == 4)
+        {
+            gun2.pickUpAmmo();
+        }
+        
         
         }
+
+    //when player collides with an Object tagged bullet, their health is lowered and calls the setHealth function in the healthbar function with the players health passed in.
         if(other.gameObject.CompareTag("bullet"))
         {
         //Debug.Log("playerHit");
-
+        health -= 10;
+        healthBar.SetHealth(health);
         other.gameObject.SetActive(false);
         }
     }
 
-
+    //This function is called from the EnemyDamage script that occurs when a player kills an enemy object
+    //this increases the killCount so that when a player reaches a certain number of kills, this functions calls a function from another script (GenerateEnemies) to start another round by spawning new enemy game objects
+    public void kill() 
+    {
+        killCount = killCount - 1;
+        // Debug.Log("Enemy Killed");
+        killScore.text = ""+enemyLevelCount.ToString()+" / "+killCount.ToString()+" remain";
+        if(killCount == 0 && (Timer.current == 3 || Timer.current == 4)) 
+        {
+            PauseMenu.GameIsComplete = true;
+        }
+    }
 
 }

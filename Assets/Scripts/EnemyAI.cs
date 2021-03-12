@@ -11,6 +11,10 @@ public class EnemyAI : MonoBehaviour
    public Transform player;
    //public float ttl = 0.5f;
 
+   public Transform shootPoint;
+
+   public AudioSource laserSound;
+
     //so that the enemy and navmesh component knows what the ground layer and player layer are.
    public LayerMask whatIsGround, whatIsPlayer;
 
@@ -43,7 +47,7 @@ public class EnemyAI : MonoBehaviour
 
         if (!playerInSightRange && !playerInAttackRange) Patroling(); //calls Patroling if player enemy doesnt see the player in sightrange and attackrange
         if (playerInSightRange && !playerInAttackRange) ChasePlayer();  //calls ChasePlayer if the player is in sight but not in attackrange
-        if (playerInSightRange && playerInAttackRange) AttackPlayer();
+        if (playerInSightRange && playerInAttackRange) AttackPlayer();  //calls AttackPlayer if the plaer is in sight and attackrange
     }
 
     private void Patroling()
@@ -65,18 +69,23 @@ public class EnemyAI : MonoBehaviour
         //stops movement
         agent.SetDestination(transform.position);
 
+        //makes object face player
         transform.LookAt(player);
 
         if(!alreadyAttacked) 
         {
-
-            Rigidbody rb = Instantiate(projectile, transform.position, Quaternion.identity).GetComponent<Rigidbody>();
+            //spawns a projectile where shootPoint is set 
+            Rigidbody rb = Instantiate(projectile, shootPoint.position, Quaternion.identity).GetComponent<Rigidbody>();
             
-            rb.AddForce(transform.forward * 25f, ForceMode.Impulse);
-            rb.AddForce(transform.up * 4f, ForceMode.Impulse);
+            //takes the rigidboy components of the projectile and modifies them. adds force to the rigidbody and shoots it toward the player
+            rb.AddForce(transform.forward * 30f, ForceMode.Impulse);
+            rb.AddForce(transform.up * -5f, ForceMode.Impulse);
 
-            //Destroy(rb, ttl);
-            
+            //destroys projectile 1s after instantiation 
+            Destroy(rb.gameObject, 1f);
+
+            laserSound.Play();
+
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), timeBetweenAttacks);
         }

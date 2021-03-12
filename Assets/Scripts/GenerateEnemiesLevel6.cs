@@ -26,15 +26,15 @@ public class GenerateEnemiesLevel6 : MonoBehaviour
 
     private void startWave() 
     {   
-        Debug.Log("BLEEP");
+        // Debug.Log("BLEEP");
         StartCoroutine(EnemySpawnShip());
     }
 
     IEnumerator EnemySpawnShip() 
     {
-        while(enemyCount < 3) 
+        while(enemyCount < 5) 
         {
-            xPos = Random.Range(12,48); //sets a random x position range for when we need to instantiate the enemy
+            xPos = Random.Range(22,48); //sets a random x position range for when we need to instantiate the enemy
             zPos = Random.Range(38,51); //sets a random y position range for when we need to instantiate the enemy
             Instantiate(enemy, new Vector3(xPos,3,zPos), Quaternion.identity);
             yield return new WaitForSeconds(0.1f); //spawn delay
