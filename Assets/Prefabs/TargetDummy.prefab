@@ -3364,9 +3364,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: feb3a8f03fb8a534498182baf756b46f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
   health: 10
-  timeToDie: 1
-  anim: {fileID: 2738165162885600273}
+  killPoints: 100
 --- !u!65 &4666795032579833028
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3378,8 +3378,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.5679231, y: 7.2535734, z: 2.0336306}
-  m_Center: {x: 0.21603844, y: 3.1267867, z: -0.18348718}
+  m_Size: {x: 0.5679231, y: 7.364417, z: 2.1712928}
+  m_Center: {x: 0.21603844, y: 3.1822085, z: -0.25231814}
 --- !u!95 &2738165162885600273
 Animator:
   serializedVersion: 3
