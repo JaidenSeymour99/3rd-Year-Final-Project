@@ -1,3 +1,4 @@
 # ProfessionalPracProject
 Professional Practice Project Year 3 Creative Computing
-setting up project.
+
+Created by Joshua Seymour & Omar Catanboga
